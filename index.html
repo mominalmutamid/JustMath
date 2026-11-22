@@ -17,8 +17,7 @@
 <section class="shelf" id="shelf" aria-label="Notebooks"></section>
 <main>
   <div class="paper" id="paper" data-bg="lined"></div><canvas id="cv"></canvas><canvas id="ov"></canvas>
-  <div class="toast" id="toast"></div>
-  <div class="zoom" id="zoom"><button class="b" data-z="out" aria-label="Zoom out"><svg><path d="M5 12h14"/></svg></button><span class="zp" id="zp">100%</span><button class="b" data-z="in" aria-label="Zoom in"><svg><path d="M12 5v14M5 12h14"/></svg></button><button class="b" data-z="fit" aria-label="Center page (key 0)" title="Center page (key 0)"><svg><path d="M4 9V5h4M20 9V5h-4M4 15v4h4M20 15v4h-4"/></svg></button></div>
+    <div class="zoom" id="zoom"><button class="b" data-z="out" aria-label="Zoom out"><svg><path d="M5 12h14"/></svg></button><span class="zp" id="zp">100%</span><button class="b" data-z="in" aria-label="Zoom in"><svg><path d="M12 5v14M5 12h14"/></svg></button><button class="b" data-z="fit" aria-label="Center page (key 0)" title="Center page (key 0)"><svg><path d="M4 9V5h4M20 9V5h-4M4 15v4h4M20 15v4h-4"/></svg></button></div>
   <div class="selbar" id="selbar" hidden><button class="sw" data-sc="#2D2A28" style="--c:#2D2A28" aria-label="Graphite"><i></i></button><button class="sw" data-sc="#6E201E" style="--c:#6E201E" aria-label="Dark wine"><i></i></button><button class="sw" data-sc="#A3726B" style="--c:#A3726B" aria-label="Rose"><i></i></button><button class="sw" data-sc="#7C7871" style="--c:#7C7871" aria-label="Ash"><i></i></button><button class="b" data-a="copy" aria-label="Copy"><svg><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7a2 2 0 002 2h3"/></svg></button><button class="b" data-a="seldel" aria-label="Delete selection"><svg><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></svg></button><button class="b" data-a="seldone" aria-label="Done"><svg><path d="M5 12l5 5 9-10"/></svg></button></div>
 
   <nav class="rail" id="rail" aria-label="Menu">
@@ -64,6 +63,10 @@
       <button class="b wide" data-a="img" aria-label="Insert picture"><svg><rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="M4 17l5-5 4 4 3-3 4 4"/></svg><span>Picture</span></button>
       <button class="b wide" data-a="paste" aria-label="Paste" disabled><svg><rect x="6" y="5" width="12" height="16" rx="2"/><path d="M9 5V4h6v1"/></svg><span>Paste</span></button>
     </div>
+    <div class="row">
+      <button class="b" data-tool="line" aria-label="Straight line"><svg><path d="M5 19L19 5"/></svg></button>
+      <button class="b wide" data-a="snap" aria-label="Snap shapes" aria-pressed="true"><svg><circle cx="12" cy="12" r="7"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg><span>Snap shapes</span></button>
+    </div>
   </div>
 
   <div class="fly" id="f-pages">
@@ -76,6 +79,8 @@
   </div>
 </main>
 <div class="modal" id="modal" hidden><div class="sheet" role="dialog" aria-label="New notebook"><input class="nm" id="nn" maxlength="40" aria-label="Notebook name" placeholder="Notebook name"><div class="covers" id="covers"></div><div style="display:flex;justify-content:flex-end;gap:8px"><button class="btn" data-m="cancel">Cancel</button><button class="btn go" data-m="ok">Create</button></div></div></div>
+<div class="toast" id="toast"></div>
+<input type="file" id="pdffile" accept="application/pdf" hidden>
 <input type="file" id="file" accept="image/png,image/jpeg,image/webp" hidden>
 <script defer src="state.js"></script>
 <script defer src="canvas.js"></script>
@@ -83,6 +88,8 @@
 <script defer src="ui.js"></script>
 <script defer src="images.js"></script>
 <script defer src="clip.js"></script>
+<script defer src="shapes.js"></script>
+<script defer src="pdfimport.js"></script>
 <script defer src="pdf.js"></script>
 <script defer src="color.js"></script>
 <script defer src="shelf.js"></script>

@@ -13,6 +13,13 @@ function xf(m){ctx.translate(m.ax+m.dx,m.ay+m.dy);ctx.rotate(m.r);ctx.scale(m.k,
 function am(m,q){const c=Math.cos(m.r),s=Math.sin(m.r),x=q.x-m.ax,y=q.y-m.ay,R=v=>Math.round(v*10)/10;return{x:R(m.ax+m.dx+m.k*(c*x-s*y)),y:R(m.ay+m.dy+m.k*(s*x+c*y)),p:q.p}}
 function drawPaper(c=ctx,bg=bgs[bi],V=view,d=D()){if(bg==='blank')return;const z=V.z*d,x0=V.x*d,y0=V.y*d,lw=Math.max(1,Math.round(d)),o=lw%2?.5:0,R=Math.round,xa=R(x0),xb=R(x0+PW*z),ya=R(y0),yb=R(y0+PH*z);
   c.save();c.setTransform(1,0,0,1,0,0);c.globalAlpha=1;c.lineWidth=lw;c.strokeStyle='#D3CDC1';c.beginPath();
+  if(bg==='graph'){const cx=PW/2,cy=PH/2,nx=Math.floor(cx/34),ny=Math.floor(cy/34);
+    for(let i=-nx;i<=nx;i++){const x=R(x0+(cx+i*34)*z)+o;c.moveTo(x,ya);c.lineTo(x,yb)}
+    for(let i=-ny;i<=ny;i++){const y=R(y0+(cy+i*34)*z)+o;c.moveTo(xa,y);c.lineTo(xb,y)}
+    c.stroke();
+    const ax=R(x0+cx*z)+o,ay=R(y0+cy*z)+o,t=14*z;c.strokeStyle=c.fillStyle='#2D2A28';c.lineWidth=lw*2;c.beginPath();c.moveTo(xa,ay);c.lineTo(xb-t,ay);c.moveTo(ax,yb);c.lineTo(ax,ya+t);c.stroke();
+    c.beginPath();c.moveTo(xb,ay);c.lineTo(xb-t*1.5,ay-t*.6);c.lineTo(xb-t*1.5,ay+t*.6);c.fill();
+    c.beginPath();c.moveTo(ax,ya);c.lineTo(ax-t*.6,ya+t*1.5);c.lineTo(ax+t*.6,ya+t*1.5);c.fill();c.restore();return}
   for(let i=1;i*34<PH;i++){const y=R(y0+i*34*z)+o;c.moveTo(xa,y);c.lineTo(xb,y)}
   if(bg==='grid')for(let i=1;i*34<PW;i++){const x=R(x0+i*34*z)+o;c.moveTo(x,ya);c.lineTo(x,yb)}
   c.stroke();
@@ -35,7 +42,7 @@ function drawOv(){o2.setTransform(1,0,0,1,0,0);o2.clearRect(0,0,ov.width,ov.heig
     const hp=hpos(b);if(!gest||gest.type!=='rotate'){o2.beginPath();o2.moveTo((b.x1+b.x2)/2,b.y1);o2.lineTo(hp.x,hp.y);o2.stroke()}
     o2.beginPath();o2.arc(hp.x,hp.y,10/z,0,7);o2.fillStyle='#6E201E';o2.fill();o2.strokeStyle='#F2ECDE';o2.lineWidth=2/z;o2.stroke()}
   place(b)}
-function place(b){if(!b||gest){sb.hidden=true;return}sb.hidden=false;const r=sb.offsetWidth||280,h=sb.offsetHeight||64;
+function place(b){if(!b||gest){sb.hidden=true;return}sb.hidden=false;sb.classList.toggle('noink',cp().s.filter(st=>sel.has(st.id)).every(st=>st.t==='img'));const r=sb.offsetWidth||280,h=sb.offsetHeight||64;
   const x=Math.min(Math.max((b.x1+b.x2)/2*view.z+view.x,r/2+8),main.clientWidth-r/2-8);let y=b.y2*view.z+view.y+16;
   if(y+h>main.clientHeight-8)y=b.y1*view.z+view.y-40-14-h;
   y=Math.min(Math.max(y,8),main.clientHeight-h-8);sb.style.left=x+'px';sb.style.top=y+'px'}

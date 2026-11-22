@@ -8,7 +8,7 @@ function sync(){
   paper.dataset.bg=bgs[bi];$('#bgn').textContent=bgs[bi][0].toUpperCase()+bgs[bi].slice(1);
   const pg=cp();$('[data-a=undo]').disabled=!pg.h.length;$('[data-a=redo]').disabled=!pg.r.length;
   $('#tt').innerHTML=IC[tool];$('#dot').style.cssText=tool==='eraser'||tool==='select'?'display:none':`background:${color}`;
-  $('#pp').textContent=`${cur+1}/${pages.length}`;$('[data-a=paste]').disabled=!clip}
+  $('#pp').textContent=`${cur+1}/${pages.length}`;$('[data-a=paste]').disabled=!clip;$('[data-a=snap]').setAttribute('aria-pressed',snapOn)}
 function rail(){$('#pages').innerHTML=pages.map((_,i)=>`<button class="pg" aria-current="${i==cur}" aria-label="Page ${i+1}" data-i="${i}">${i+1}</button>`).join('');sync()}
 function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),2200)}
 $('main').onclick=e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset,pg=cp();
@@ -16,6 +16,7 @@ $('main').onclick=e=>{const b=e.target.closest('button');if(!b)return;const d=b.
   if(d.a==='min'){rail_.classList.toggle('min');closeFly();return}
   if(d.a==='home'){home();return}
   if(d.a==='export'){exportPDF();return}
+  if(d.a==='snap'){snapOn=!snapOn;try{localStorage.setItem('jm-snap',snapOn?'1':'0')}catch(e){}}
   if(d.a==='img'){closeFly();$('#file').click();return}
   if(d.a==='copy'){copySel();return}
   if(d.a==='paste'){pasteClip();closeFly();return}

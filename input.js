@@ -12,7 +12,8 @@ ov.onpointerdown=e=>{
   if(e.button!==0)return;
   ov.setPointerCapture(e.pointerId);closeFly();rail_.classList.add('dim');zui.classList.add('dim');
   const p=pt(e),pg=cp();
-  if(tool==='pen'||tool==='highlighter'){commit();live={id:++uid,t:tool,c:color,w:size,p:[p]};pg.s.push(live);gest={type:'draw'};framed(()=>render(live))}
+  if(tool==='pen'||tool==='highlighter'){commit();live={id:++uid,t:tool,c:color,w:size,p:[p]};pg.s.push(live);gest={type:'draw',anchor:p};armSnap();framed(()=>render(live))}
+  else if(tool==='line'){commit();live={id:++uid,t:'pen',c:color,w:size,p:[p,p]};pg.s.push(live);gest={type:'line'};redraw()}
   else if(tool==='eraser'){gest={type:'erase'};eraseAt(p)}
   else{const b=sel.size?bbox():null;
     if(b){const hp=hpos(b);
@@ -26,17 +27,19 @@ ov.onpointermove=e=>{if(tp.has(e.pointerId))tp.set(e.pointerId,{x:e.clientX,y:e.
     view.z=z;view.x=mx-r.left-g.gx*z;view.y=my-r.top-g.gy*z;view.auto=false;apply();return}
   if(g.type==='pan'){view.x+=e.clientX-g.lx;view.y+=e.clientY-g.ly;g.lx=e.clientX;g.ly=e.clientY;view.auto=false;apply();return}
   for(const c of(e.getCoalescedEvents?.()||[e])){const p=pt(c);
-    if(g.type==='draw'){const a=live.p.at(-1);live.p.push(p);if(live.t==='pen')framed(()=>{setup(live);seg(live,a,p)})}
+    if(g.type==='line')live.p=[live.p[0],lineEnd(live.p[0],p)];
+    else if(g.type==='draw'){if(g.snapped)continue;const a=live.p.at(-1);live.p.push(p);if(live.t==='pen')framed(()=>{setup(live);seg(live,a,p)})}
     else if(g.type==='erase')eraseAt(p);
     else if(g.type==='lasso')g.pts.push(p);
     else if(g.type==='rotate')g.m.r=Math.atan2(p.y-g.c.y,p.x-g.c.x)-g.a0;
     else if(g.type==='move'){g.m.dx=p.x-g.s.x;g.m.dy=p.y-g.s.y}
     else if(g.type==='resize'){const vx=g.h.x-g.a.x,vy=g.h.y-g.a.y;g.m.k=Math.max(.1,((p.x-g.a.x)*vx+(p.y-g.a.y)*vy)/(vx*vx+vy*vy))}}
-  if(g.type==='draw'){if(live.t==='highlighter')redraw()}
+  if(g.type==='draw'){trackHold(g,pt(e));if(live.t==='highlighter'&&!g.snapped)redraw()}
+  else if(g.type==='line')redraw()
   else if(g.type==='lasso')drawOv();
   else if(g.m)redraw()};
 ov.onpointerup=ov.onpointercancel=e=>{tp.delete(e.pointerId);const g=gest;if(!g)return;if(g.type==='pinch'){if(tp.size<2){gest=null;redraw()}return}gest=null;rail_.classList.remove('dim');zui.classList.remove('dim');
-  if(g.type==='draw')live=null;
+  clearTimeout(snapT);if(g.type==='draw'||g.type==='line')live=null;
   if(g.type==='lasso'){const P=g.pts,xs=P.map(q=>q.x),ys=P.map(q=>q.y),tiny=Math.max(...xs)-Math.min(...xs)<8&&Math.max(...ys)-Math.min(...ys)<8;
     if(tiny){const p=P[0],s=cp().s;for(let k=s.length-1;k>=0;k--){const st=s[k],q=st.p;if(st.t==='img'?inPoly(p,[q[0],q[1],q[3],q[2]]):hit(st,p,12)){sel.add(st.id);break}}}
     else if(P.length>2)cp().s.forEach(st=>{if(st.p.filter(q=>inPoly(q,P)).length>=st.p.length/2)sel.add(st.id)})}
