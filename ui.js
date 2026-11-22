@@ -17,6 +17,7 @@ $('main').onclick=e=>{const b=e.target.closest('button');if(!b)return;const d=b.
   if(d.a==='home'){home();return}
   if(d.a==='export'){exportPDF();return}
   if(d.a==='snap'){snapOn=!snapOn;try{localStorage.setItem('jm-snap',snapOn?'1':'0')}catch(e){}}
+  if(d.a==='xy'||d.a==='xyz'){addAxes(d.a);closeFly();return}
   if(d.a==='img'){closeFly();$('#file').click();return}
   if(d.a==='copy'){copySel();return}
   if(d.a==='paste'){pasteClip();closeFly();return}
@@ -30,8 +31,8 @@ $('main').onclick=e=>{const b=e.target.closest('button');if(!b)return;const d=b.
   if(d.a==='undo'&&pg.h.length){pg.r.push(pg.s);pg.s=pg.h.pop();sel=new Set()}
   if(d.a==='redo'&&pg.r.length){pg.h.push(pg.s);pg.s=pg.r.pop();sel=new Set()}
   if(d.a==='bg'){bi=(bi+1)%bgs.length;nb.bg=bgs[bi]}
-  if(d.a==='clear'){commit();pg.s=[];sel=new Set()}
+  if(d.a==='clear'){commit();pg.s=pg.s.filter(st=>st.lock);sel=new Set()}
   if(d.a==='add'){pages.push(mk());cur=pages.length-1;sel=new Set()}
   if(d.a==='del'&&pages.length>1){pages.splice(cur,1);cur=Math.min(cur,pages.length-1);sel=new Set()}
   if(d.i!==undefined){cur=+d.i;sel=new Set()}
-  redraw();rail();save()};
+  redraw();rail();save();preloadImgs()};

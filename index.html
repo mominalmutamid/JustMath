@@ -67,6 +67,10 @@
       <button class="b" data-tool="line" aria-label="Straight line"><svg><path d="M5 19L19 5"/></svg></button>
       <button class="b wide" data-a="snap" aria-label="Snap shapes" aria-pressed="true"><svg><circle cx="12" cy="12" r="7"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg><span>Snap shapes</span></button>
     </div>
+    <div class="row">
+      <button class="b wide" data-a="xy" aria-label="XY plane"><svg><path d="M3 12h18M12 21V3M18 9l3 3-3 3M9 6l3-3 3 3"/></svg><span>XY plane</span></button>
+      <button class="b wide" data-a="xyz" aria-label="XYZ axes"><svg><path d="M12 20V4M12 12h8M12 12L5 19"/></svg><span>XYZ axes</span></button>
+    </div>
   </div>
 
   <div class="fly" id="f-pages">
@@ -83,12 +87,14 @@
 <input type="file" id="pdffile" accept="application/pdf" hidden>
 <input type="file" id="file" accept="image/png,image/jpeg,image/webp" hidden>
 <script defer src="state.js"></script>
+<script defer src="store.js"></script>
 <script defer src="canvas.js"></script>
 <script defer src="input.js"></script>
 <script defer src="ui.js"></script>
 <script defer src="images.js"></script>
 <script defer src="clip.js"></script>
 <script defer src="shapes.js"></script>
+<script defer src="axes.js"></script>
 <script defer src="pdfimport.js"></script>
 <script defer src="pdf.js"></script>
 <script defer src="color.js"></script>

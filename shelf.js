@@ -11,16 +11,16 @@ $('#shelf').onclick=e=>{const o=e.target.closest('.open'),x=e.target.closest('.x
   if(e.target.closest('#new')){openModal();return}
   if(e.target.closest('#pdfin')){$('#pdffile').click();return}
   if(o){armed=null;openNb(+o.dataset.id);return}
-  if(x){const id=+x.dataset.x;if(armed===id){nbs=nbs.filter(n=>n.id!==id);armed=null;flush()}else armed=id;renderShelf();return}
+  if(x){const id=+x.dataset.x;if(armed===id){const dead=nbs.find(n=>n.id===id);nbs=nbs.filter(n=>n.id!==id);armed=null;dropNb(dead)}else armed=id;renderShelf();return}
   if(armed){armed=null;renderShelf()}};
 $('#name').oninput=e=>{nb.name=e.target.value.trim()||'Untitled notebook';save()};
-try{nbs=JSON.parse(localStorage.getItem(KEY))||[]}catch(e){}
-nbs.forEach(n=>n.pages.forEach(p=>{p.h=[];p.r=[]}));
 let nc=0;
 function openModal(){nc=0;$('#nn').value=`Notebook ${nbs.length+1}`;$('#covers').innerHTML=covers.map((c,i)=>`<button class="cvr" style="--cv:${c[0]}" data-cv="${i}" aria-label="Cover ${i+1}" aria-pressed="${i==0}"></button>`).join('');$('#modal').hidden=false;$('#nn').focus();$('#nn').select()}
-function create(){const name=$('#nn').value.trim()||`Notebook ${nbs.length+1}`;nbs.push({id:Date.now(),name,cv:covers[nc],bg:'lined',pages:[mk()],t:Date.now()});$('#modal').hidden=true;flush();openNb(nbs.at(-1).id)}
+function create(){const name=$('#nn').value.trim()||`Notebook ${nbs.length+1}`;nbs.push({id:Date.now(),name,cv:covers[nc],bg:'lined',pages:[mk()],t:Date.now()});$('#modal').hidden=true;saveNb(nbs.at(-1));openNb(nbs.at(-1).id)}
 $('#modal').onclick=e=>{if(e.target.id==='modal'){e.target.hidden=true;return}const b=e.target.closest('button');if(!b)return;const d=b.dataset;
   if(d.cv!==undefined){nc=+d.cv;$$('.cvr').forEach((x,i)=>x.setAttribute('aria-pressed',i==nc))}
   if(d.m==='cancel')$('#modal').hidden=true;if(d.m==='ok')create()};
 $('#nn').onkeydown=e=>{if(e.key==='Enter')create();if(e.key==='Escape')$('#modal').hidden=true};
 renderShelf();
+(async()=>{try{nbs=await loadNbs()}catch(e){nbs=[]}nbs.forEach(n=>n.pages.forEach(p=>{p.h=[];p.r=[]}));renderShelf()})();
+addEventListener('pagehide',flush);document.addEventListener('visibilitychange',()=>{if(document.hidden)flush()});

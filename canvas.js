@@ -7,7 +7,10 @@ function render(st,c=ctx){
   if(st.t==='img'){const im=IMGS.get(st.i);if(!im)return;const[a,b,d]=st.p,w=im.naturalWidth,h=im.naturalHeight;
     c.save();c.globalAlpha=1;c.transform((b.x-a.x)/w,(b.y-a.y)/w,(d.x-a.x)/h,(d.y-a.y)/h,a.x,a.y);c.drawImage(im,0,0);c.restore();return}
   setup(st,c);const p=st.p;
-  if(st.t==='pen'){if(p.length==1)seg(st,p[0],p[0],c);for(let i=1;i<p.length;i++)seg(st,p[i-1],p[i],c);return}
+  if(st.t==='pen'){if(p.length==1){seg(st,p[0],p[0],c);return}
+    let k0=-1;for(let i=1;i<p.length;i++){const k=Math.round((.35+p[i].p*1.3)*10)/10;
+      if(k!==k0){if(k0>=0)c.stroke();c.beginPath();c.moveTo(p[i-1].x,p[i-1].y);c.lineWidth=st.w*k;k0=k}c.lineTo(p[i].x,p[i].y)}
+    c.stroke();return}
   c.lineWidth=st.w*4;c.beginPath();c.moveTo(p[0].x,p[0].y);p.forEach(q=>c.lineTo(q.x,q.y));if(p.length==1)c.lineTo(p[0].x+.1,p[0].y);c.stroke()}
 function xf(m){ctx.translate(m.ax+m.dx,m.ay+m.dy);ctx.rotate(m.r);ctx.scale(m.k,m.k);ctx.translate(-m.ax,-m.ay)}
 function am(m,q){const c=Math.cos(m.r),s=Math.sin(m.r),x=q.x-m.ax,y=q.y-m.ay,R=v=>Math.round(v*10)/10;return{x:R(m.ax+m.dx+m.k*(c*x-s*y)),y:R(m.ay+m.dy+m.k*(s*x+c*y)),p:q.p}}

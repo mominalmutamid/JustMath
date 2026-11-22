@@ -17,18 +17,18 @@ async function drawCover(x,S){
   x.fillStyle=ink;x.font='700 40px '+F;x.fillText('JustMath',296,PH-112)}
 async function exportPDF(){
   if(!nb)return;toast('Making PDF…');await new Promise(r=>setTimeout(r,40));
-  await Promise.all(pages.flatMap(p=>p.s).filter(s=>s.t==='img').map(s=>ensureImg(s.i)));
   const S=2.5,W=PW*S,H=PH*S,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d'),jpgs=[];
   const snap=async()=>new Uint8Array(await(await new Promise(r=>c.toBlob(r,'image/jpeg',.92))).arrayBuffer());
   await drawCover(x,S);jpgs.push(await snap());
   for(const pg of pages){
+    await Promise.all(pg.s.filter(s=>s.t==='img').map(s=>ensureImg(s.i)));
     x.setTransform(1,0,0,1,0,0);x.globalAlpha=1;x.fillStyle='#F2ECDE';x.fillRect(0,0,W,H);
     drawPaper(x,nb.bg,{z:1,x:0,y:0},S);
-    x.save();x.scale(S,S);pg.s.forEach(st=>render(st,x));x.restore();jpgs.push(await snap());
+    x.save();x.scale(S,S);pg.s.forEach(st=>render(st,x));x.restore();jpgs.push(await snap());evictExcept(keepIds());
   }
   const a=document.createElement('a');a.href=URL.createObjectURL(buildPdf(jpgs,W,H));
   a.download=((nb.name||'notebook').replace(/[\\/:*?"<>|]/g,'').trim()||'notebook')+'.pdf';
-  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000);toast('PDF saved');
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000);toast('PDF saved');preloadImgs();
 }
 function buildPdf(jpgs,W,H){
   const enc=new TextEncoder(),chunks=[],offs=[],n=jpgs.length;let len=0;
