@@ -37,8 +37,10 @@ ov.onpointermove=e=>{if(tp.has(e.pointerId))tp.set(e.pointerId,{x:e.clientX,y:e.
   else if(g.m)redraw()};
 ov.onpointerup=ov.onpointercancel=e=>{tp.delete(e.pointerId);const g=gest;if(!g)return;if(g.type==='pinch'){if(tp.size<2){gest=null;redraw()}return}gest=null;rail_.classList.remove('dim');zui.classList.remove('dim');
   if(g.type==='draw')live=null;
-  if(g.type==='lasso'&&g.pts.length>2)cp().s.forEach(st=>{if(st.p.filter(q=>inPoly(q,g.pts)).length>=st.p.length/2)sel.add(st.id)});
-  if(g.m){commit();const m=g.m;cp().s=cp().s.map(st=>sel.has(st.id)?{...st,w:st.w*m.k,p:st.p.map(q=>am(m,q))}:st)}
+  if(g.type==='lasso'){const P=g.pts,xs=P.map(q=>q.x),ys=P.map(q=>q.y),tiny=Math.max(...xs)-Math.min(...xs)<8&&Math.max(...ys)-Math.min(...ys)<8;
+    if(tiny){const p=P[0],s=cp().s;for(let k=s.length-1;k>=0;k--){const st=s[k],q=st.p;if(st.t==='img'?inPoly(p,[q[0],q[1],q[3],q[2]]):hit(st,p,12)){sel.add(st.id);break}}}
+    else if(P.length>2)cp().s.forEach(st=>{if(st.p.filter(q=>inPoly(q,P)).length>=st.p.length/2)sel.add(st.id)})}
+  if(g.m){commit();const m=g.m;cp().s=cp().s.map(st=>sel.has(st.id)?{...st,w:(st.w||0)*m.k,p:st.p.map(q=>am(m,q))}:st)}
   redraw();sync();save()};
 function apply(){paper.style.transform=`translate(${view.x}px,${view.y}px) scale(${view.z})`;$('#zp').textContent=Math.round(view.z/fitZ*100)+'%';redraw()}
 function fit(){const w=main.clientWidth,h=main.clientHeight;fitZ=Math.min(w/PW,h/PH)||1;view={z:fitZ,x:(w-PW*fitZ)/2,y:(h-PH*fitZ)/2,auto:true};apply()}

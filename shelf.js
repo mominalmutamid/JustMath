@@ -4,7 +4,7 @@ function renderShelf(){
   const trash='<svg><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></svg>';
   $('#shelf').innerHTML='<button class="new" id="new"><svg><path d="M12 5v14M5 12h14"/></svg>New notebook</button>'+
   [...nbs].sort((a,b)=>b.t-a.t).map(n=>`<div class="nbk" style="--cv:${n.cv[0]};--ink:${n.cv[1]}"><button class="open" data-id="${n.id}"><span class="nt">${esc(n.name)}</span><span class="ns">${n.pages.length} ${n.pages.length==1?'page':'pages'}</span></button><button class="x${armed==n.id?' arm':''}" data-x="${n.id}" aria-label="Delete notebook">${armed==n.id?'Delete?':trash}</button></div>`).join('')}
-function openNb(id){nb=nbs.find(n=>n.id==id);pages=nb.pages;cur=0;bi=Math.max(0,bgs.indexOf(nb.bg));$('#name').value=nb.name;sel=new Set();closeFly();show('editor');fit();rail()}
+function openNb(id){nb=nbs.find(n=>n.id==id);pages=nb.pages;cur=0;bi=Math.max(0,bgs.indexOf(nb.bg));$('#name').value=nb.name;sel=new Set();closeFly();show('editor');fit();rail();preloadImgs()}
 function home(){clearTimeout(tm);flush();nb=null;pages=[mk()];closeFly();renderShelf();show('shelf')}
 $('#shelf').onclick=e=>{const o=e.target.closest('.open'),x=e.target.closest('.x');
   if(e.target.closest('#new')){openModal();return}

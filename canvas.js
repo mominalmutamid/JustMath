@@ -3,7 +3,10 @@ function T(c){const d=D();c.setTransform(d*view.z,0,0,d*view.z,d*view.x,d*view.y
 function framed(fn){ctx.save();T(ctx);ctx.beginPath();ctx.rect(0,0,PW,PH);ctx.clip();fn();ctx.restore()}
 function setup(st,c=ctx){c.strokeStyle=st.c;c.globalAlpha=st.t==='highlighter'?.35:1;c.lineCap=c.lineJoin='round'}
 function seg(st,a,b,c=ctx){c.lineWidth=st.w*(st.t==='pen'?.35+b.p*1.3:4);c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.stroke()}
-function render(st,c=ctx){setup(st,c);const p=st.p;
+function render(st,c=ctx){
+  if(st.t==='img'){const im=IMGS.get(st.i);if(!im)return;const[a,b,d]=st.p,w=im.naturalWidth,h=im.naturalHeight;
+    c.save();c.globalAlpha=1;c.transform((b.x-a.x)/w,(b.y-a.y)/w,(d.x-a.x)/h,(d.y-a.y)/h,a.x,a.y);c.drawImage(im,0,0);c.restore();return}
+  setup(st,c);const p=st.p;
   if(st.t==='pen'){if(p.length==1)seg(st,p[0],p[0],c);for(let i=1;i<p.length;i++)seg(st,p[i-1],p[i],c);return}
   c.lineWidth=st.w*4;c.beginPath();c.moveTo(p[0].x,p[0].y);p.forEach(q=>c.lineTo(q.x,q.y));if(p.length==1)c.lineTo(p[0].x+.1,p[0].y);c.stroke()}
 function xf(m){ctx.translate(m.ax+m.dx,m.ay+m.dy);ctx.rotate(m.r);ctx.scale(m.k,m.k);ctx.translate(-m.ax,-m.ay)}
@@ -41,5 +44,5 @@ function commit(){const pg=cp();pg.h.push(pg.s.slice());if(pg.h.length>80)pg.h.s
 function inPoly(p,P){let c=false;for(let i=0,j=P.length-1;i<P.length;j=i++){const a=P[i],b=P[j];if((a.y>p.y)!=(b.y>p.y)&&p.x<(b.x-a.x)*(p.y-a.y)/(b.y-a.y)+a.x)c=!c}return c}
 function dseg(p,a,b){const dx=b.x-a.x,dy=b.y-a.y,l=dx*dx+dy*dy;let t=l?((p.x-a.x)*dx+(p.y-a.y)*dy)/l:0;t=Math.max(0,Math.min(1,t));return Math.hypot(p.x-a.x-t*dx,p.y-a.y-t*dy)}
 function hit(st,p,r){const q=st.p;if(q.length==1)return Math.hypot(q[0].x-p.x,q[0].y-p.y)<=r;for(let i=1;i<q.length;i++)if(dseg(p,q[i-1],q[i])<=r)return true;return false}
-function eraseAt(p){const pg=cp(),keep=pg.s.filter(st=>!hit(st,p,10+size*3));
+function eraseAt(p){const pg=cp(),keep=pg.s.filter(st=>st.t==='img'||!hit(st,p,10+size*3));
   if(keep.length!==pg.s.length){if(!gest.did){commit();gest.did=true}pg.s=keep;redraw()}}
