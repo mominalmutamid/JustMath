@@ -42,7 +42,14 @@
       <button class="sw" data-c="#2D2A28" style="--c:#2D2A28" aria-label="Graphite"><i></i></button>
       <button class="sw" data-c="#6E201E" style="--c:#6E201E" aria-label="Dark wine"><i></i></button>
       <button class="sw" data-c="#A3726B" style="--c:#A3726B" aria-label="Rose"><i></i></button>
-      <button class="sw" data-c="#7C7871" style="--c:#7C7871" aria-label="Ash"><i></i></button>
+      <button class="sw" data-c="#7C7871" style="--c:#7C7871" aria-label="Ash"><i></i></button><button class="sw" data-a="pick" aria-label="Custom color"><i class="rb"></i></button>
+    </div>
+    <div class="pick" id="pick" hidden>
+      <div class="wheelbox" id="wheelbox"><div class="wheel"></div><i class="cur" id="cur"></i><i class="knob" id="knob"></i></div>
+      <label class="sl">Saturation<input type="range" id="sat" min="0" max="100"></label>
+      <label class="sl">Lightness<input type="range" id="lig" min="0" max="100"></label>
+      <div class="hexrow">HEX<input id="hex" maxlength="7" autocomplete="off" spellcheck="false"></div>
+      <div class="saved" id="saved"></div>
     </div>
     <div class="row">
       <button class="b sz" data-s="2" style="--d:6px" aria-label="Thin"><i></i></button>
@@ -69,6 +76,8 @@
 <script defer src="canvas.js"></script>
 <script defer src="input.js"></script>
 <script defer src="ui.js"></script>
+<script defer src="pdf.js"></script>
+<script defer src="color.js"></script>
 <script defer src="shelf.js"></script>
 <script defer src="pwa.js"></script>
 </body>

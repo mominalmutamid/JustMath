@@ -15,7 +15,8 @@ $('main').onclick=e=>{const b=e.target.closest('button');if(!b)return;const d=b.
   if(d.fly){toggleFly(d.fly);return}
   if(d.a==='min'){rail_.classList.toggle('min');closeFly();return}
   if(d.a==='home'){home();return}
-  if(d.a==='export'){toast('PDF export comes after you approve the design.');return}
+  if(d.a==='export'){exportPDF();return}
+  if(d.a==='pick'){const k=$('#pick');k.hidden=!k.hidden;if(!k.hidden)openPick();return}
   if(d.z){const r=ov.getBoundingClientRect();if(d.z==='fit')fit();else zoomAt(r.left+r.width/2,r.top+r.height/2,d.z==='in'?1.25:.8);return}
   if(d.tool){tool=d.tool;sel=new Set()}
   if(d.c){color=d.c;if(tool==='eraser')tool='pen'}if(d.s)size=+d.s;

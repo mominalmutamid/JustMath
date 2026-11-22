@@ -1,20 +1,20 @@
 /* Drawing engine: strokes, paper lines, selection box. */
 function T(c){const d=D();c.setTransform(d*view.z,0,0,d*view.z,d*view.x,d*view.y)}
 function framed(fn){ctx.save();T(ctx);ctx.beginPath();ctx.rect(0,0,PW,PH);ctx.clip();fn();ctx.restore()}
-function setup(st){ctx.strokeStyle=st.c;ctx.globalAlpha=st.t==='highlighter'?.35:1;ctx.lineCap=ctx.lineJoin='round'}
-function seg(st,a,b){ctx.lineWidth=st.w*(st.t==='pen'?.35+b.p*1.3:4);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke()}
-function render(st){setup(st);const p=st.p;
-  if(st.t==='pen'){if(p.length==1)seg(st,p[0],p[0]);for(let i=1;i<p.length;i++)seg(st,p[i-1],p[i]);return}
-  ctx.lineWidth=st.w*4;ctx.beginPath();ctx.moveTo(p[0].x,p[0].y);p.forEach(q=>ctx.lineTo(q.x,q.y));if(p.length==1)ctx.lineTo(p[0].x+.1,p[0].y);ctx.stroke()}
+function setup(st,c=ctx){c.strokeStyle=st.c;c.globalAlpha=st.t==='highlighter'?.35:1;c.lineCap=c.lineJoin='round'}
+function seg(st,a,b,c=ctx){c.lineWidth=st.w*(st.t==='pen'?.35+b.p*1.3:4);c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.stroke()}
+function render(st,c=ctx){setup(st,c);const p=st.p;
+  if(st.t==='pen'){if(p.length==1)seg(st,p[0],p[0],c);for(let i=1;i<p.length;i++)seg(st,p[i-1],p[i],c);return}
+  c.lineWidth=st.w*4;c.beginPath();c.moveTo(p[0].x,p[0].y);p.forEach(q=>c.lineTo(q.x,q.y));if(p.length==1)c.lineTo(p[0].x+.1,p[0].y);c.stroke()}
 function xf(m){ctx.translate(m.ax+m.dx,m.ay+m.dy);ctx.rotate(m.r);ctx.scale(m.k,m.k);ctx.translate(-m.ax,-m.ay)}
 function am(m,q){const c=Math.cos(m.r),s=Math.sin(m.r),x=q.x-m.ax,y=q.y-m.ay,R=v=>Math.round(v*10)/10;return{x:R(m.ax+m.dx+m.k*(c*x-s*y)),y:R(m.ay+m.dy+m.k*(s*x+c*y)),p:q.p}}
-function drawPaper(){const bg=bgs[bi];if(bg==='blank')return;const d=D(),z=view.z*d,x0=view.x*d,y0=view.y*d,lw=Math.max(1,Math.round(d)),o=lw%2?.5:0,R=Math.round,xa=R(x0),xb=R(x0+PW*z),ya=R(y0),yb=R(y0+PH*z);
-  ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;ctx.lineWidth=lw;ctx.strokeStyle='#D3CDC1';ctx.beginPath();
-  for(let i=1;i*34<PH;i++){const y=R(y0+i*34*z)+o;ctx.moveTo(xa,y);ctx.lineTo(xb,y)}
-  if(bg==='grid')for(let i=1;i*34<PW;i++){const x=R(x0+i*34*z)+o;ctx.moveTo(x,ya);ctx.lineTo(x,yb)}
-  ctx.stroke();
-  if(bg==='lined'){const x=R(x0+PW*.05*z)+o;ctx.beginPath();ctx.strokeStyle='#B79088';ctx.moveTo(x,ya);ctx.lineTo(x,yb);ctx.stroke()}
-  ctx.restore()}
+function drawPaper(c=ctx,bg=bgs[bi],V=view,d=D()){if(bg==='blank')return;const z=V.z*d,x0=V.x*d,y0=V.y*d,lw=Math.max(1,Math.round(d)),o=lw%2?.5:0,R=Math.round,xa=R(x0),xb=R(x0+PW*z),ya=R(y0),yb=R(y0+PH*z);
+  c.save();c.setTransform(1,0,0,1,0,0);c.globalAlpha=1;c.lineWidth=lw;c.strokeStyle='#D3CDC1';c.beginPath();
+  for(let i=1;i*34<PH;i++){const y=R(y0+i*34*z)+o;c.moveTo(xa,y);c.lineTo(xb,y)}
+  if(bg==='grid')for(let i=1;i*34<PW;i++){const x=R(x0+i*34*z)+o;c.moveTo(x,ya);c.lineTo(x,yb)}
+  c.stroke();
+  if(bg==='lined'){const x=R(x0+PW*.05*z)+o;c.beginPath();c.strokeStyle='#B79088';c.moveTo(x,ya);c.lineTo(x,yb);c.stroke()}
+  c.restore()}
 function hpos(b){const g=gest;return g&&g.type==='rotate'?{x:g.c.x+Math.sin(g.m.r)*g.R,y:g.c.y-Math.cos(g.m.r)*g.R}:{x:(b.x1+b.x2)/2,y:b.y1-40/view.z}}
 function redraw(){ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);drawPaper();
   framed(()=>{const m=gest&&gest.m;cp().s.forEach(st=>{if(m&&sel.has(st.id)){ctx.save();xf(m);render(st);ctx.restore()}else render(st)})});drawOv()}

@@ -1,5 +1,13 @@
 /* Pen, mouse, wheel and keyboard input; zoom and pan. */
+const tp=new Map();
+function cancelGest(){const g=gest;if(!g)return;const pg=cp();
+  if(g.type==='draw'){pg.s.pop();pg.h.pop();live=null}
+  if(g.type==='erase'&&g.did)pg.s=pg.h.pop();
+  gest=null;rail_.classList.remove('dim');zui.classList.remove('dim')}
+function startPinch(){const[a,b]=[...tp.values()],r=ov.getBoundingClientRect(),mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
+  gest={type:'pinch',d0:Math.hypot(a.x-b.x,a.y-b.y)||1,z0:view.z,gx:(mx-r.left-view.x)/view.z,gy:(my-r.top-view.y)/view.z};redraw()}
 ov.onpointerdown=e=>{
+  if(e.pointerType==='touch'){tp.set(e.pointerId,{x:e.clientX,y:e.clientY});if(tp.size===2){cancelGest();startPinch();return}if(tp.size>2)return}
   if(e.button===1||space){ov.setPointerCapture(e.pointerId);gest={type:'pan',lx:e.clientX,ly:e.clientY};return}
   if(e.button!==0)return;
   ov.setPointerCapture(e.pointerId);closeFly();rail_.classList.add('dim');zui.classList.add('dim');
@@ -13,7 +21,9 @@ ov.onpointerdown=e=>{
       if(i>=0){const a=cs[(i+2)%4];gest={type:'resize',a,h:cs[i],m:{k:1,r:0,ax:a.x,ay:a.y,dx:0,dy:0}};drawOv();return}
       if(p.x>b.x1&&p.x<b.x2&&p.y>b.y1&&p.y<b.y2){gest={type:'move',s:p,m:{k:1,r:0,ax:0,ay:0,dx:0,dy:0}};drawOv();return}}
     sel=new Set();gest={type:'lasso',pts:[p]};drawOv()}};
-ov.onpointermove=e=>{if(!gest)return;const g=gest;
+ov.onpointermove=e=>{if(tp.has(e.pointerId))tp.set(e.pointerId,{x:e.clientX,y:e.clientY});if(!gest)return;const g=gest;
+  if(g.type==='pinch'){if(tp.size<2)return;const[a,b]=[...tp.values()],r=ov.getBoundingClientRect(),mx=(a.x+b.x)/2,my=(a.y+b.y)/2,z=Math.min(Math.max(g.z0*Math.hypot(a.x-b.x,a.y-b.y)/g.d0,fitZ*.3),fitZ*8);
+    view.z=z;view.x=mx-r.left-g.gx*z;view.y=my-r.top-g.gy*z;view.auto=false;apply();return}
   if(g.type==='pan'){view.x+=e.clientX-g.lx;view.y+=e.clientY-g.ly;g.lx=e.clientX;g.ly=e.clientY;view.auto=false;apply();return}
   for(const c of(e.getCoalescedEvents?.()||[e])){const p=pt(c);
     if(g.type==='draw'){const a=live.p.at(-1);live.p.push(p);if(live.t==='pen')framed(()=>{setup(live);seg(live,a,p)})}
@@ -25,7 +35,7 @@ ov.onpointermove=e=>{if(!gest)return;const g=gest;
   if(g.type==='draw'){if(live.t==='highlighter')redraw()}
   else if(g.type==='lasso')drawOv();
   else if(g.m)redraw()};
-ov.onpointerup=ov.onpointercancel=()=>{const g=gest;if(!g)return;gest=null;rail_.classList.remove('dim');zui.classList.remove('dim');
+ov.onpointerup=ov.onpointercancel=e=>{tp.delete(e.pointerId);const g=gest;if(!g)return;if(g.type==='pinch'){if(tp.size<2){gest=null;redraw()}return}gest=null;rail_.classList.remove('dim');zui.classList.remove('dim');
   if(g.type==='draw')live=null;
   if(g.type==='lasso'&&g.pts.length>2)cp().s.forEach(st=>{if(st.p.filter(q=>inPoly(q,g.pts)).length>=st.p.length/2)sel.add(st.id)});
   if(g.m){commit();const m=g.m;cp().s=cp().s.map(st=>sel.has(st.id)?{...st,w:st.w*m.k,p:st.p.map(q=>am(m,q))}:st)}

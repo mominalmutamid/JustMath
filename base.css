@@ -1,16 +1,16 @@
-@font-face{font-family:Inter;src:url(inter.woff2) format('woff2');font-weight:100 900;font-display:swap}
-:root{--wine:#6E201E;--graphite:#2D2A28;--linen:#F2ECDE;
+@font-face{font-family:'Plus Jakarta Sans';src:url(font.woff2) format('woff2');font-weight:200 800;font-display:swap}
+:root{--f:'Plus Jakarta Sans',system-ui,sans-serif;--wine:#6E201E;--graphite:#2D2A28;--linen:#F2ECDE;
 --raise:color-mix(in srgb,var(--linen) 7%,var(--graphite));
 --hair:color-mix(in srgb,var(--linen) 14%,var(--graphite));
 --dim:color-mix(in srgb,var(--linen) 60%,var(--graphite));color-scheme:dark}
 *{box-sizing:border-box;margin:0}
 html,body{height:100%}
-body{background:var(--graphite);color:var(--linen);font:500 15px/1.4 Inter,system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+body{background:var(--graphite);color:var(--linen);font:500 15px/1.4 var(--f);display:flex;flex-direction:column;overflow:hidden;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
 button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--linen);outline-offset:2px}
 svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 body[data-view=shelf] main,body[data-view=editor] header,body[data-view=editor] #shelf{display:none}
 header{flex:none;height:64px;display:flex;align-items:center;padding:0 24px;border-bottom:1px solid var(--hair)}
-.title{font:600 25px Inter,system-ui,sans-serif}
+.title{font:600 25px var(--f)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 .logo{border-radius:8px;margin-right:12px}
