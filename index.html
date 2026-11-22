@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JustMath</title>
+<meta name="theme-color" content="#2D2A28">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="shelf.css">
+<link rel="stylesheet" href="editor.css">
+</head>
+<body data-view="shelf">
+<header><img class="logo" src="icon-192.png" alt="" width="34" height="34"><span class="title">JustMath</span></header>
+<section class="shelf" id="shelf" aria-label="Notebooks"></section>
+<main>
+  <div class="paper" id="paper" data-bg="lined"></div><canvas id="cv"></canvas><canvas id="ov"></canvas>
+  <div class="toast" id="toast"></div>
+  <div class="zoom" id="zoom"><button class="b" data-z="out" aria-label="Zoom out"><svg><path d="M5 12h14"/></svg></button><span class="zp" id="zp">100%</span><button class="b" data-z="in" aria-label="Zoom in"><svg><path d="M12 5v14M5 12h14"/></svg></button><button class="b" data-z="fit" aria-label="Center page (key 0)" title="Center page (key 0)"><svg><path d="M4 9V5h4M20 9V5h-4M4 15v4h4M20 15v4h-4"/></svg></button></div>
+  <div class="selbar" id="selbar" hidden><button class="sw" data-sc="#2D2A28" style="--c:#2D2A28" aria-label="Graphite"><i></i></button><button class="sw" data-sc="#6E201E" style="--c:#6E201E" aria-label="Dark wine"><i></i></button><button class="sw" data-sc="#A3726B" style="--c:#A3726B" aria-label="Rose"><i></i></button><button class="sw" data-sc="#7C7871" style="--c:#7C7871" aria-label="Ash"><i></i></button><button class="b" data-a="seldel" aria-label="Delete selection"><svg><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></svg></button><button class="b" data-a="seldone" aria-label="Done"><svg><path d="M5 12l5 5 9-10"/></svg></button></div>
+
+  <nav class="rail" id="rail" aria-label="Menu">
+    <button class="b hide" data-a="min" aria-label="Hide or show menu"><svg><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button class="b" data-a="home" aria-label="All notebooks"><svg><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></button>
+    <button class="b" data-fly="f-tools" aria-label="Pen, colors and sizes" aria-pressed="false"><span id="tt"></span><i class="dot" id="dot"></i></button>
+    <button class="b" data-fly="f-pages" aria-label="Pages" aria-pressed="false"><span class="pp" id="pp"></span></button>
+    <button class="b" data-a="undo" aria-label="Undo"><svg><path d="M9 7L4 12l5 5"/><path d="M4 12h10a6 6 0 010 8h-3"/></svg></button>
+    <button class="b" data-a="redo" aria-label="Redo"><svg><path d="M15 7l5 5-5 5"/><path d="M20 12H10a6 6 0 000 8h3"/></svg></button>
+    <button class="b go" data-a="export" aria-label="Export PDF"><svg><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg></button>
+  </nav>
+
+  <div class="fly" id="f-tools">
+    <div class="row">
+      <button class="b" data-tool="pen" aria-label="Pen"><svg><path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/></svg></button>
+      <button class="b" data-tool="highlighter" aria-label="Highlighter"><svg><path d="M4 20h6"/><path d="M8 16l8-9 3 3-8 9z"/></svg></button>
+      <button class="b" data-tool="eraser" aria-label="Eraser"><svg><path d="M8 20h11"/><path d="M5 14l8-8 6 6-6 6H9z"/></svg></button>
+      <button class="b" data-tool="select" aria-label="Select"><svg><path d="M12 4c4.4 0 8 2.2 8 5s-3.6 5-8 5-8-2.2-8-5 3.6-5 8-5z" stroke-dasharray="3 3"/><path d="M9 14c0 3 1 4 3 6"/></svg></button>
+    </div>
+    <div class="row">
+      <button class="sw" data-c="#2D2A28" style="--c:#2D2A28" aria-label="Graphite"><i></i></button>
+      <button class="sw" data-c="#6E201E" style="--c:#6E201E" aria-label="Dark wine"><i></i></button>
+      <button class="sw" data-c="#A3726B" style="--c:#A3726B" aria-label="Rose"><i></i></button>
+      <button class="sw" data-c="#7C7871" style="--c:#7C7871" aria-label="Ash"><i></i></button>
+    </div>
+    <div class="row">
+      <button class="b sz" data-s="2" style="--d:6px" aria-label="Thin"><i></i></button>
+      <button class="b sz" data-s="4" style="--d:11px" aria-label="Medium"><i></i></button>
+      <button class="b sz" data-s="8" style="--d:18px" aria-label="Thick"><i></i></button>
+    </div>
+    <div class="row">
+      <button class="b wide" data-a="bg" aria-label="Page background"><svg><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 12h16M12 4v16"/></svg><span id="bgn">Lined</span></button>
+      <button class="b" data-a="clear" aria-label="Clear page"><svg><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></svg></button>
+    </div>
+  </div>
+
+  <div class="fly" id="f-pages">
+    <input class="nm" id="name" aria-label="Notebook name" maxlength="40">
+    <div class="pgs" id="pages"></div>
+    <div class="row">
+      <button class="b wide" data-a="add"><svg><path d="M12 5v14M5 12h14"/></svg><span>Add page</span></button>
+      <button class="b" data-a="del" aria-label="Delete page"><svg><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></svg></button>
+    </div>
+  </div>
+</main>
+<div class="modal" id="modal" hidden><div class="sheet" role="dialog" aria-label="New notebook"><input class="nm" id="nn" maxlength="40" aria-label="Notebook name" placeholder="Notebook name"><div class="covers" id="covers"></div><div style="display:flex;justify-content:flex-end;gap:8px"><button class="btn" data-m="cancel">Cancel</button><button class="btn go" data-m="ok">Create</button></div></div></div>
+<script defer src="state.js"></script>
+<script defer src="canvas.js"></script>
+<script defer src="input.js"></script>
+<script defer src="ui.js"></script>
+<script defer src="shelf.js"></script>
+<script defer src="pwa.js"></script>
+</body>
+</html>

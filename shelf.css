@@ -1,0 +1,16 @@
+.shelf{flex:1;min-height:0;overflow:auto;padding:32px 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:28px;align-content:start}
+.nbk,.new{aspect-ratio:3/4;border-radius:6px 14px 14px 6px}
+.nbk{position:relative;background:var(--cv);color:var(--ink);border:1px solid var(--hair);box-shadow:inset 9px 0 0 rgba(0,0,0,.16),0 10px 26px rgba(0,0,0,.35)}
+.open{position:absolute;inset:0;background:none;border:0;border-radius:inherit;padding:18px 18px 18px 28px;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;text-align:left;cursor:pointer;color:inherit}
+.nt{font:600 24px/1.15 Inter,system-ui,sans-serif;overflow-wrap:anywhere}.ns{font-size:13px;opacity:.7}
+.x{position:absolute;top:8px;right:8px;min-width:40px;height:40px;border:0;border-radius:10px;background:none;color:var(--ink);opacity:.7;display:grid;place-items:center;cursor:pointer}
+.x:hover{opacity:1}.x.arm{background:var(--graphite);color:var(--linen);opacity:1;padding:0 12px;font-size:13px;font-weight:600}
+.new{border:1.5px dashed var(--dim);background:none;color:var(--dim);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;font-weight:600;cursor:pointer}
+.new svg{width:32px;height:32px}.new:hover{color:var(--linen);border-color:var(--linen)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:grid;place-items:center;z-index:20}.modal[hidden]{display:none}
+.sheet{width:min(380px,calc(100vw - 32px));background:var(--raise);border:1px solid var(--hair);border-radius:18px;padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.covers{display:flex;gap:12px;padding:14px 0 22px}
+.cvr{width:56px;aspect-ratio:3/4;border-radius:4px 9px 9px 4px;background:var(--cv);border:1px solid var(--hair);box-shadow:inset 5px 0 0 rgba(0,0,0,.16);cursor:pointer;padding:0}
+.cvr[aria-pressed=true]{box-shadow:inset 5px 0 0 rgba(0,0,0,.16),0 0 0 3px var(--raise),0 0 0 5px var(--linen)}
+.btn{height:48px;padding:0 22px;border-radius:12px;border:1px solid var(--hair);background:none;font-weight:600;cursor:pointer}.btn:hover{background:var(--hair)}
+@media (max-width:760px){.shelf{padding:20px 16px;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:18px}header{padding:0 16px}}
